@@ -37,8 +37,12 @@ instance Eq (HList '[]) where
 instance (Eq t, Eq (HList ts)) => Eq (HList (t ': ts)) where
     (a :# as) == (b :# bs) = a == b && as == bs
 
--- instance Ord (HList '[]) where
---     compare HNil HNil = EQ
---     compare HNil _ = LT
+-- Note : the above cannot check HLists of different lengths
 
--- instance (Ord t, Ord (HList ts)) => Ord (HList (t ': ts)) where
+instance Ord (HList '[]) where
+    compare HNil HNil = EQ
+
+instance (Ord t, Ord (HList ts)) => Ord (HList (t ': ts)) where
+    compare (a :# as) (b :# bs) = if cab == EQ then compare as bs else cab
+        where cab = compare a b
+
