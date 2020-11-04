@@ -4,4 +4,5 @@
 
 mkdir myproject
 cabal init --cabal-version=2.4 --license=NONE -p exercise
-cabal v2-haddock :exercise
+cabal configure --ghc-options=-haddock
+cabal build
