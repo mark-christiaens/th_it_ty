@@ -33,6 +33,7 @@ data Op next
   | Subtract !next
   | Multiply !next
   | Divide !next
+  | Split [next]
   | -- | Terminate program
     End
   deriving (Functor)
@@ -41,7 +42,7 @@ type Program = Free Op
 
 push :: Double -> Program ()
 -- push x = liftF $ Push x ()
--- push x = wrap . fmap return
+-- push x = wrap . fmap return $ Push x ()
 -- push x = wrap $ Push x $ return ()
 -- push x = Free $ Push x $ Pure ()
 push x = Free (Push x (Pure ()))
@@ -74,6 +75,9 @@ multiply = Free (Multiply (Pure ()))
 divide :: Program ()
 -- divide = liftF $ Divide ()
 divide = Free (Divide (Pure ()))
+
+split :: Program ()
+split = Free (Split [Pure ()])
 
 end :: forall a. Program a
 -- end = liftF End
@@ -149,5 +153,6 @@ interpret prog =
     interpret' (Free (Divide next)) = do
       modify $ modStack (/)
       interpret' next
+    interpret' (Free (Split next)) = undefined
     interpret' (Free End) =
       return ()
