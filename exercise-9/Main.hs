@@ -30,7 +30,7 @@ instance (HasPrintf a, KnownSymbol text)=> HasPrintf ((text :: Symbol) :<< a) wh
     format s _ = format (s <> symbolVal (Proxy @text)) (Proxy @a)
 
 instance (HasPrintf a, Show param) => HasPrintf ((param :: Type) :<< a) where
-    type Printf (param :<< a) = param -> Printf a 
+    type Printf (param :<< a) = param -> Printf a
     format s _ param = format (s <> show param) (Proxy @a)
 
 instance {-# OVERLAPPING #-} HasPrintf a => HasPrintf (String :<< a) where
